@@ -1,0 +1,112 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context="com.example.zwiesel.recipe_app.AddRecipeActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+       <EditText
+           android:layout_width="match_parent"
+           android:layout_height="40dp"
+           android:id="@+id/editText_rec_title"
+           android:hint="@string/name_hint"
+           android:maxLines="1"
+           android:layout_weight="1"
+           android:layout_marginTop="20dp"
+           android:layout_marginBottom="20dp" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:id="@+id/spinner_category"
+            android:spinnerMode="dropdown"
+            android:background="@drawable/spinner_background_ab_example">
+        </Spinner>
+
+    </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/linearLayout_dynamic_ing">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:id="@+id/editText_ing_name_shown"
+                            android:hint="@string/ingredient_name_hint"
+                            android:maxLines="1"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:inputType="number"
+                            android:id="@+id/editText_ing_amount_shown"
+                            android:hint="@string/amount_hint"
+                            android:maxLines="1"
+                            android:textSize="15sp" />
+
+                        <Spinner
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:id="@+id/spinner_unit"
+                            android:spinnerMode="dropdown"
+                            android:background="@drawable/spinner_background_ab_example">
+                        </Spinner>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:onClick="clickAddIngr"
+                    android:id="@+id/button_add_ingr"
+                    android:src="@drawable/ic_action_add_dark"
+                    android:background="#00000000"
+                    android:layout_marginTop="20dp" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/editText_description"
+                    android:hint="@string/description_hint"
+                    android:gravity="top|left"
+                    android:paddingTop="20dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+        </ScrollView>
+</LinearLayout>

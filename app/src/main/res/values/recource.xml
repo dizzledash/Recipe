@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="unit_array">
+        <item>g</item>
+        <item>kg</item>
+        <item>ml</item>
+        <item>l</item>
+        <item>Stk</item>
+    </string-array>
+
+    <string-array name="category">
+        <item>Appetizer</item>
+        <item>Entree</item>
+        <item>Dessert</item>
+    </string-array>
+</resources>

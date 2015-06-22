@@ -1,0 +1,13 @@
+<resources>
+
+    <style name="OwnTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/OwnActionBar</item>
+        <item name="actionBarStyle">@style/OwnActionBar</item>
+    </style>
+
+    <style name="OwnActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/ab_solid_example</item>
+        <item name="background">@drawable/ab_solid_example</item>
+    </style>
+
+</resources>
