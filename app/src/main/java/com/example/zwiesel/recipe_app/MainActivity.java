@@ -19,13 +19,25 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    //static ArrayList<String[][]> saveArrayList = new ArrayList<>();
     ListView mDrawerList;
     RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -67,6 +79,8 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        //loadIntoArrayList();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -118,7 +132,38 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    // Own inner class for the DrawerListAdapter
+
+    public void loadIntoArrayList(){
+
+        try{
+            InputStream inputXML = openFileInput("recipes.xml");
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(inputXML);
+
+            doc.getDocumentElement().normalize();
+
+            NodeList nList = doc.getElementsByTagName("recipe");
+
+            //for(int i = 0; i < nList.getLength(); i++){
+                //Node
+            //}
+        }
+        catch (ParserConfigurationException pcEx){
+            Toast.makeText(this, "Parser Configuration Exception", Toast.LENGTH_LONG).show();
+        }
+        catch (FileNotFoundException fnfEx){
+            Toast.makeText(this, "File Not Found", Toast.LENGTH_LONG).show();
+        }
+        catch (IOException ioEx){
+            Toast.makeText(this, "IOException", Toast.LENGTH_LONG).show();
+        }
+        catch (SAXException SAXEx){
+            Toast.makeText(this, "SAXException", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // Inner class for the DrawerListAdapter
     class NavItem {
         String mTitle;
         int mIcon;
