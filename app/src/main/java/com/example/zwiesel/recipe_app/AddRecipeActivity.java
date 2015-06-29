@@ -1,9 +1,10 @@
 package com.example.zwiesel.recipe_app;
 
-import android.app.ActionBar;
-import android.content.Intent;
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -17,9 +18,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,19 +33,19 @@ import javax.xml.transform.stream.StreamResult;
 
 public class AddRecipeActivity extends ActionBarActivity {
 
-    private ImageButton buttonAddIngr;
+    //private ImageButton buttonAddIngr;
     private EditText recTitle, ingAmount, ingTitle, descTxt;
     private LinearLayout ingLayout;
     private Spinner unitSpinner, catSpinner;
-    private ActionBar actBar;
-    private int countIngAdd = 0;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
 
-        buttonAddIngr = (ImageButton) findViewById(R.id.button_add_ingr);
+       // buttonAddIngr = (ImageButton) findViewById(R.id.button_add_ingr);
         recTitle = (EditText) findViewById(R.id.editText_rec_title);
         ingAmount = (EditText) findViewById(R.id.editText_ing_amount_shown);
         ingLayout = (LinearLayout) findViewById(R.id.linearLayout_dynamic_ing);
@@ -68,6 +68,34 @@ public class AddRecipeActivity extends ActionBarActivity {
         spinAdapterCat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         catSpinner.setAdapter(spinAdapterCat);
     }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_add_recipe, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.saveRecipeButton){
+            createSaveFile();
+            return true;
+        }
+
+        //noinspection SimplifiableIfStatement
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     // After click on the plus-button, dynamically a new line of ingredient-input is created
     public void clickAddIngr(View v){
@@ -115,20 +143,19 @@ public class AddRecipeActivity extends ActionBarActivity {
         newLayout.addView(spinUnit);
 
         ingLayout.addView(newLayout);
-        countIngAdd++;
     }
 
-    // Saving isn not working yet
-    public void saveRec(View view) {
-        Toast.makeText(this, "Got here", Toast.LENGTH_LONG).show();
-        File saveFile = new File("/data/recipes.xml");
-        if(saveFile.exists()) {
+
+    // Saving
+    public void saveRec() {
+        //Toast.makeText(this, "Got here", Toast.LENGTH_LONG).show();
+        //File saveFile = new File("recipes.xml");
+        //if(saveFile.exists()) {
             try {
-                //String[][] ingArray = new String[][3]
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                Document doc = docBuilder.parse(saveFile);
+                Document doc = docBuilder.parse(openFileInput("recipes.xml"));
 
                 doc.getDocumentElement().normalize();
 
@@ -156,7 +183,7 @@ public class AddRecipeActivity extends ActionBarActivity {
                 TransformerFactory transFact = TransformerFactory.newInstance();
                 Transformer transf = transFact.newTransformer();
                 DOMSource src = new DOMSource(doc);
-                StreamResult res = new StreamResult(new File("recipes.xml"));
+                StreamResult res = new StreamResult(openFileOutput("recipes.xml", Context.MODE_PRIVATE));
 
                 transf.transform(src, res);
             }
@@ -173,12 +200,12 @@ public class AddRecipeActivity extends ActionBarActivity {
                 Toast.makeText(this, "TransformerException", Toast.LENGTH_LONG).show();
             }
             Toast.makeText(this, "Recipe saved", Toast.LENGTH_LONG).show();
-        }
-        else
-            createSaveFile();
+        //}
+        //else
+            //createSaveFile();
     }
 
-    // Saving is not working yet
+    // Saving
     private void createSaveFile(){
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -191,7 +218,7 @@ public class AddRecipeActivity extends ActionBarActivity {
             TransformerFactory transFact = TransformerFactory.newInstance();
             Transformer transf = transFact.newTransformer();
             DOMSource src = new DOMSource(doc);
-            StreamResult res = new StreamResult(new File("/data/recipes.xml"));
+            StreamResult res = new StreamResult(openFileOutput("recipes.xml", Context.MODE_PRIVATE));
 
             transf.transform(src, res);
         }
@@ -201,7 +228,10 @@ public class AddRecipeActivity extends ActionBarActivity {
         catch (TransformerException tEx){
             Toast.makeText(this, "TransformerException", Toast.LENGTH_LONG).show();
         }
+        catch (FileNotFoundException fnfEx) {
+            Toast.makeText(this, "File Not Found", Toast.LENGTH_LONG).show();
+        }
         Toast.makeText(this, "New XML document created", Toast.LENGTH_LONG).show();
-        saveRec(buttonAddIngr);
+        saveRec();
     }
 }
