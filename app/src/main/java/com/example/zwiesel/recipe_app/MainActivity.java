@@ -4,6 +4,7 @@ package com.example.zwiesel.recipe_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -51,13 +53,29 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<Recipe> rArrayList = new ArrayList<>();
     private ArrayList<NavItem> mNavItems = new ArrayList<>();
 
+    TextView tv1,tv2;
+    EditText eT1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+       // tv1=(TextView)findViewById(R.id.textView1);
+        //tv2=(TextView)findViewById(R.id.textView2);
+
+        //tv1=(TextView)findViewById(R.id.textView1);
+        //Typeface face= Typeface.createFromAsset(getAssets(), "fonts/coders_crux.ttf");
+        //tv1.setTypeface(face);
+        //eT1=(EditText)findViewById(R.id.whatever);
+        //eT1.setTypeface(face);
+
+       // tv2=(TextView)findViewById(R.id.textView2);
+        //Typeface face1= Typeface.createFromAsset(getAssets(), "fonts/coders_crux.ttf");
+        //tv2.setTypeface(face1);
+
+
         rMainContentLayout = (LinearLayout) findViewById(R.id.main_Content);
-
-
 
         //------------Drawer--------------
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_Layout);
@@ -70,8 +88,11 @@ public class MainActivity extends ActionBarActivity {
         mNavItems.add(new NavItem("Home", R.drawable.ic_action_home_dark));
         mNavItems.add(new NavItem("Add Recipe", R.drawable.ic_action_add_dark));
         mNavItems.add(new NavItem("Appetizer", R.drawable.ic_action_cat_appetizer));
-        mNavItems.add(new NavItem("Entree", R.drawable.ic_action_cat_entree));
-        mNavItems.add(new NavItem("Dessert", R.drawable.ic_action_cat_dessert));
+        mNavItems.add(new NavItem("Desserts", R.drawable.ic_action_cat_dessert));
+        mNavItems.add(new NavItem("Main Dish", R.drawable.ic_action_cat_entree));
+        mNavItems.add(new NavItem("Snacks", R.drawable.ab_solid_example));
+        mNavItems.add(new NavItem("Salads", R.drawable.ab_solid_example));
+        mNavItems.add(new NavItem("Soups", R.drawable.ab_solid_example));
 
         // Populate the Navigation Drawer with options
         mDrawerPane = (RelativeLayout) findViewById(R.id.navigation_Content);

@@ -12,11 +12,28 @@
         android:orientation="vertical"
         android:background="#ffffffff">
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/whatever"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView1"
+            android:text="Hallo Karo"
+            android:layout_centerVertical="true"
+            android:textSize="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/navigation_Content"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
