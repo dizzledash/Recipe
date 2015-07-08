@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -37,6 +38,7 @@ public class AddRecipeActivity extends ActionBarActivity {
     private EditText recTitle, ingAmount, ingTitle, descTxt;
     private LinearLayout ingLayout;
     private Spinner unitSpinner, catSpinner;
+    private final boolean REC_ADDED = true;
 
 
 
@@ -87,7 +89,7 @@ public class AddRecipeActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.saveRecipeButton){
-            createSaveFile();
+            saveRec();
             return true;
         }
 
@@ -148,9 +150,16 @@ public class AddRecipeActivity extends ActionBarActivity {
 
     // Saving
     public void saveRec() {
-        //Toast.makeText(this, "Got here", Toast.LENGTH_LONG).show();
-        //File saveFile = new File("recipes.xml");
-        //if(saveFile.exists()) {
+
+
+        //TODO-soe Check whether XML file already exists
+        //TODO-soe Check whether views - at least title-view - are empty; if true -> message and don't save
+
+
+        File saveFile = getFileStreamPath("recipes.xml");
+
+        if(saveFile.exists()) {
+
             try {
 
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -159,6 +168,7 @@ public class AddRecipeActivity extends ActionBarActivity {
 
                 doc.getDocumentElement().normalize();
 
+                //TODO-soe Add category attribute
                 Element rootElement = doc.getDocumentElement();
                 Element recipe = doc.createElement("recipe");
                 Attr recAttr = doc.createAttribute("name");
@@ -200,9 +210,12 @@ public class AddRecipeActivity extends ActionBarActivity {
                 Toast.makeText(this, "TransformerException", Toast.LENGTH_LONG).show();
             }
             Toast.makeText(this, "Recipe saved", Toast.LENGTH_LONG).show();
-        //}
-        //else
-            //createSaveFile();
+        }
+        else
+            createSaveFile();
+
+        // TODO-soe Tell MainActivity that it needs to reload the Recipe-ArrayList
+        // TODO-soe Return to MainActivity
     }
 
     // Saving

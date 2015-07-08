@@ -2,9 +2,7 @@ package com.example.zwiesel.recipe_app;
 
 import java.util.ArrayList;
 
-/**
- * Created by Sören on 24.06.2015.
- */
+
 public class Recipe {
 
     static final int CATEGORY_APPETIZER = 0;
@@ -56,5 +54,9 @@ public class Recipe {
 
     public String[] getIngredient(int index){
         return aList.get(index);
+    }
+
+    public String toString(){
+        return name;
     }
 }

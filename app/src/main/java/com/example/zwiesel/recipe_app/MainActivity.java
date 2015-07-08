@@ -4,7 +4,7 @@ package com.example.zwiesel.recipe_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,22 +14,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,23 +43,26 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends ActionBarActivity {
 
-    ListView mDrawerList;
-    RelativeLayout mDrawerPane;
+    private ListView mDrawerList, rRecipeList;
+    private LinearLayout rMainContentLayout;
+    private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-
-    ArrayList<NavItem> mNavItems = new ArrayList<>();
+    private ArrayList<Recipe> rArrayList = new ArrayList<>();
+    private ArrayList<NavItem> mNavItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rMainContentLayout = (LinearLayout) findViewById(R.id.main_Content);
 
-        // Drawer
+
+
+        //------------Drawer--------------
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_Layout);
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
-                R.drawable.ic_action_menu_dark,
                 R.string.drawer_open,
                 R.string.drawer_close);
 
@@ -80,7 +88,17 @@ public class MainActivity extends ActionBarActivity {
         });
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        //loadIntoArrayList();
+
+
+
+        //-------------Recipelist----------------
+
+        loadRecipesIntoArrayList();
+        createRecipeList();
+
+
+
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -133,35 +151,76 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    public void loadIntoArrayList(){
+    public void loadRecipesIntoArrayList() {
 
-        try{
-            InputStream inputXML = openFileInput("recipes.xml");
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(inputXML);
+        File file = getFileStreamPath("recipes.xml");
 
-            doc.getDocumentElement().normalize();
+        if (file.exists()) {
+            Toast.makeText(this, "File existiert", Toast.LENGTH_SHORT).show();
+            try {
+                InputStream inputXML = openFileInput("recipes.xml");
+                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+                Document doc = docBuilder.parse(inputXML);
 
-            NodeList nList = doc.getElementsByTagName("recipe");
+                doc.getDocumentElement().normalize();
 
-            //for(int i = 0; i < nList.getLength(); i++){
-                //Node
-            //}
+                NodeList nList = doc.getElementsByTagName("recipe");
+
+                for (int i = 0; i < nList.getLength(); i++) {
+                    Node nNode = nList.item(i);
+
+
+                    Element eElement = (Element) nNode;
+
+                    Recipe nListItem = new Recipe(eElement.getAttribute("name"));
+                    NodeList nListIng = eElement.getElementsByTagName("ingredient");
+
+                    for (int j = 0; j < nListIng.getLength(); j++) {
+                        Node nNodeIng = nListIng.item(j);
+                        Element eElementIng = (Element) nNodeIng;
+
+                        nListItem.addIngredient(eElementIng.getTextContent(),
+                                eElementIng.getAttribute("amount"),
+                                eElementIng.getAttribute("unit"));
+                    }
+
+                    nListItem.setDescription(
+                            eElement.getElementsByTagName("description").item(0).getTextContent());
+                    rArrayList.add(nListItem);
+                }
+
+                Toast.makeText(this, rArrayList.get(0).getDescription(), Toast.LENGTH_SHORT).show();
+
+            }
+            catch(ParserConfigurationException pcEx){
+                Toast.makeText(this, "Parser Configuration Exception", Toast.LENGTH_LONG).show();
+            }
+            catch(FileNotFoundException fnfEx){
+                Toast.makeText(this, "File Not Found", Toast.LENGTH_LONG).show();
+            }
+            catch(IOException ioEx){
+                Toast.makeText(this, "IOException", Toast.LENGTH_LONG).show();
+            }
+            catch(SAXException SAXEx){
+                Toast.makeText(this, "SAXException", Toast.LENGTH_LONG).show();
+            }
         }
-        catch (ParserConfigurationException pcEx){
-            Toast.makeText(this, "Parser Configuration Exception", Toast.LENGTH_LONG).show();
-        }
-        catch (FileNotFoundException fnfEx){
-            Toast.makeText(this, "File Not Found", Toast.LENGTH_LONG).show();
-        }
-        catch (IOException ioEx){
-            Toast.makeText(this, "IOException", Toast.LENGTH_LONG).show();
-        }
-        catch (SAXException SAXEx){
-            Toast.makeText(this, "SAXException", Toast.LENGTH_LONG).show();
+
+        else
+            Toast.makeText(this, "Datei nicht vorhanden", Toast.LENGTH_LONG).show();
+    }
+
+
+    //Population of the MainActivity with the saved recipes
+    public void createRecipeList(){
+        for(int i=0; i<rArrayList.size(); i++){
+            TextView rTextView = new TextView(this);
+            rTextView.setText(rArrayList.get(i).getName());
+            rMainContentLayout.addView(rTextView);
         }
     }
+
 
     // Inner class for the DrawerListAdapter
     class NavItem {
@@ -174,7 +233,8 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    // Inner class DrawerListAdapter needed for the drawer and populated by the NavItems
+
+    // Inner class DrawerListAdapter, needed by the drawer and populated by the NavItems
     class DrawerListAdapter extends BaseAdapter {
 
         Context mContext;
@@ -217,4 +277,35 @@ public class MainActivity extends ActionBarActivity {
             return view;
         }
     }
+
+
+    /*class RecipeListAdapter extends ArrayAdapter{
+
+        private List<Recipe> rList;
+        private Context rContext;
+
+        public RecipeListAdapter(Context context, int resource, List objects) {
+            super(context, resource, objects);
+            rList = objects;
+            rContext = context;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent){
+            View view;
+
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) rContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.r_list_item, null);
+            }
+            else {
+                view = convertView;
+            }
+
+            TextView rListItem = (TextView) findViewById(R.id.rList_item_view);
+            rListItem.setText(rList.get(position).getName());
+
+
+            return view;
+        }
+    }*/
 }

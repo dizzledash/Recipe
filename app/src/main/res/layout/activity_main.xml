@@ -9,17 +9,9 @@
         android:id="@+id/main_Content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:background="#ffffffff">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="60dp"/>
-        </ScrollView>
     </LinearLayout>
 
     <RelativeLayout
