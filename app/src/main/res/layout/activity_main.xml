@@ -27,7 +27,7 @@
 
     <RelativeLayout
         android:id="@+id/navigation_Content"
-        android:layout_width="150dp"
+        android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 

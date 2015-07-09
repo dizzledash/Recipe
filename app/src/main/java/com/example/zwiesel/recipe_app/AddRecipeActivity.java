@@ -166,8 +166,6 @@ public class AddRecipeActivity extends ActionBarActivity {
 
                 doc.getDocumentElement().normalize();
 
-                //TODO-soe Add category attribute
-
                 //Getting the root-element to add a new recipe
                 Element rootElement = doc.getDocumentElement();
                 Element recipe = doc.createElement("recipe");
@@ -214,7 +212,7 @@ public class AddRecipeActivity extends ActionBarActivity {
             catch (TransformerException tEx){
                 Toast.makeText(this, "TransformerException", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(this, "Recipe saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Recipe saved", Toast.LENGTH_SHORT).show();
         }
         else
             createSaveFile();

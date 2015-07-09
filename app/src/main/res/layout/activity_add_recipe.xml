@@ -21,9 +21,7 @@
            android:id="@+id/editText_rec_title"
            android:hint="@string/name_hint"
            android:maxLines="1"
-           android:layout_weight="1"
-           android:layout_marginTop="20dp"
-           android:layout_marginBottom="20dp" />
+           android:layout_weight="1"/>
 
         <Spinner
             android:layout_width="match_parent"

@@ -4,6 +4,7 @@ package com.example.zwiesel.recipe_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -102,7 +103,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //and the displayed recipes
         //if(recAdded)
             loadRecipesIntoArrayList();
-        createRecipeList();
+        createRecipeList(6);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -158,7 +159,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawer(mDrawerPane);
                 break;
             default:
-                createRecipeList();
+                createRecipeList(6);
                 mDrawerLayout.closeDrawer(mDrawerPane);
                 break;
         }
@@ -221,7 +222,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     nListItem.setDescription(
                             eElement.getElementsByTagName("description").item(0).getTextContent());
                     nListItem.setCategory(eElement.getAttribute("category"));
-                    Toast.makeText(this, eElement.getAttribute("category"), Toast.LENGTH_SHORT).show();
                     rArrayList.add(nListItem);
                 }
             }
@@ -245,36 +245,56 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
 
     /**Population of the MainActivity with the saved recipes*/
-    public void createRecipeList(){
-        rLayoutRecList.removeAllViews();
-        rDisplayArrayList.clear();
-
-        for(int i=0; i<rArrayList.size(); i++){
-            TextView rTextView = new TextView(this);
-            rTextView.setText(rArrayList.get(i).getName());
-            rTextView.setPadding(50, 50, 50, 50);
-            rTextView.setTextSize(20f);
-            rTextView.setClickable(true);
-            rTextView.setOnClickListener(this);
-            rDisplayArrayList.add(new DisplayItem(i, rTextView));
-            rLayoutRecList.addView(rTextView);
-        }
-    }
-
     public void createRecipeList(int category){
         rLayoutRecList.removeAllViews();
         rDisplayArrayList.clear();
 
+        LinearLayout.LayoutParams paramsMain = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams paramsBar = new LinearLayout.LayoutParams(60, LinearLayout.LayoutParams.MATCH_PARENT);
+
         for(int i=0; i<rArrayList.size(); i++){
-            if(rArrayList.get(i).getCategory()==category) {
+            if(category==rArrayList.get(i).getCategory()||category==6) {
+                LinearLayout rLinearLayoutMain = new LinearLayout(this);
+                LinearLayout rLinearLayoutCatBar = new LinearLayout(this);
                 TextView rTextView = new TextView(this);
+
+                rLinearLayoutMain.setOrientation(LinearLayout.HORIZONTAL);
+                rLinearLayoutMain.setLayoutParams(paramsMain);
+
+                switch (rArrayList.get(i).getCategory()) {
+                    case Recipe.CATEGORY_APPETIZER:
+                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#E91E63"));
+                        break;
+                    case Recipe.CATEGORY_DESSERT:
+                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case Recipe.CATEGORY_SNACKS:
+                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#2196F3"));
+                        break;
+                    case Recipe.CATEGORY_SALAD:
+                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#4CAF50"));
+                        break;
+                    case Recipe.CATEGORY_SOUP:
+                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#009688"));
+                        break;
+                    default:
+                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#607D8B"));
+                        break;
+                }
+                rLinearLayoutCatBar.setLayoutParams(paramsBar);
+
                 rTextView.setText(rArrayList.get(i).getName());
                 rTextView.setPadding(50, 50, 50, 50);
                 rTextView.setTextSize(20f);
                 rTextView.setClickable(true);
                 rTextView.setOnClickListener(this);
+
+                rLinearLayoutMain.addView(rLinearLayoutCatBar);
+                rLinearLayoutMain.addView(rTextView);
+                rLayoutRecList.addView(rLinearLayoutMain);
+
                 rDisplayArrayList.add(new DisplayItem(i, rTextView));
-                rLayoutRecList.addView(rTextView);
             }
         }
     }
@@ -339,34 +359,21 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
 
-            if(position==0||position==1){
-                if (convertView == null) {
-                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                if(position==0||position==1)
                     view = inflater.inflate(R.layout.drawer_item_org, null);
-                } else {
-                    view = convertView;
-                }
-
-                TextView titleView = (TextView) view.findViewById(R.id.nav_List_item_title);
-                ImageView iconView = (ImageView) view.findViewById(R.id.nav_List_item_icon);
-
-                titleView.setText(mNavItems.get(position).mTitle);
-                iconView.setImageResource(mNavItems.get(position).mIcon);
-            }
-            else {
-                if (convertView == null) {
-                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                else
                     view = inflater.inflate(R.layout.drawer_item, null);
-                } else {
-                    view = convertView;
-                }
-
-                TextView titleView = (TextView) view.findViewById(R.id.nav_List_item_title);
-                ImageView iconView = (ImageView) view.findViewById(R.id.nav_List_item_icon);
-
-                titleView.setText(mNavItems.get(position).mTitle);
-                iconView.setImageResource(mNavItems.get(position).mIcon);
             }
+            else
+                view = convertView;
+
+            TextView titleView = (TextView) view.findViewById(R.id.nav_List_item_title);
+            ImageView iconView = (ImageView) view.findViewById(R.id.nav_List_item_icon);
+
+            titleView.setText(mNavItems.get(position).mTitle);
+            iconView.setImageResource(mNavItems.get(position).mIcon);
 
             return view;
         }
