@@ -30,8 +30,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:id="@+id/spinner_category"
-            android:spinnerMode="dropdown"
-            android:background="@drawable/spinner_background_ab_example">
+            android:spinnerMode="dropdown">
         </Spinner>
 
     </LinearLayout>
@@ -80,8 +79,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="2"
                             android:id="@+id/spinner_unit"
-                            android:spinnerMode="dropdown"
-                            android:background="@drawable/spinner_background_ab_example">
+                            android:spinnerMode="dropdown">
                         </Spinner>
 
                     </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.zwiesel.recipe_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -47,7 +48,6 @@ public class AddRecipeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_recipe);
 
-       // buttonAddIngr = (ImageButton) findViewById(R.id.button_add_ingr);
         recTitle = (EditText) findViewById(R.id.editText_rec_title);
         ingAmount = (EditText) findViewById(R.id.editText_ing_amount_shown);
         ingLayout = (LinearLayout) findViewById(R.id.linearLayout_dynamic_ing);
@@ -99,7 +99,7 @@ public class AddRecipeActivity extends ActionBarActivity {
 
 
 
-    // After click on the plus-button, dynamically a new line of ingredient-input is created
+    /** After click on the plus-button, dynamically a new line of ingredient-input is created*/
     public void clickAddIngr(View v){
 
         // Predefined parameters needed for the initialization
@@ -148,11 +148,9 @@ public class AddRecipeActivity extends ActionBarActivity {
     }
 
 
-    // Saving
+    /**Saves the typed in recipe into an xml file*/
     public void saveRec() {
 
-
-        //TODO-soe Check whether XML file already exists
         //TODO-soe Check whether views - at least title-view - are empty; if true -> message and don't save
 
 
@@ -169,6 +167,8 @@ public class AddRecipeActivity extends ActionBarActivity {
                 doc.getDocumentElement().normalize();
 
                 //TODO-soe Add category attribute
+
+                //Getting the root-element to add a new recipe
                 Element rootElement = doc.getDocumentElement();
                 Element recipe = doc.createElement("recipe");
                 Attr recAttr = doc.createAttribute("name");
@@ -176,6 +176,7 @@ public class AddRecipeActivity extends ActionBarActivity {
                 recipe.setAttributeNode(recAttr);
                 rootElement.appendChild(recipe);
 
+                //Adding the ingredients as child elements to the recipe element
                 Element ing = doc.createElement("ingredient");
                 Attr ingAttrAmount = doc.createAttribute("amount");
                 Attr ingAttrUnit = doc.createAttribute("unit");
@@ -186,6 +187,7 @@ public class AddRecipeActivity extends ActionBarActivity {
                 ing.appendChild(doc.createTextNode(ingTitle.getText().toString()));
                 recipe.appendChild(ing);
 
+                //Adding the description text as child to the recipe element
                 Element infoTxt = doc.createElement("description");
                 infoTxt.appendChild(doc.createTextNode(descTxt.getText().toString()));
                 recipe.appendChild(infoTxt);
@@ -214,17 +216,20 @@ public class AddRecipeActivity extends ActionBarActivity {
         else
             createSaveFile();
 
-        // TODO-soe Tell MainActivity that it needs to reload the Recipe-ArrayList
-        // TODO-soe Return to MainActivity
+        //Let the MainActivity know, that we added a new recipe
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE, REC_ADDED);
+        startActivity(intent);
     }
 
-    // Saving
+    /**If the XML-File for saving the recipes doesn't exists, it will be created here*/
     private void createSaveFile(){
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
 
+            //Just creating the root-element in the XML-file
             Element rootElement = doc.createElement("recipeList");
             doc.appendChild(rootElement);
 

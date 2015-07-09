@@ -4,7 +4,6 @@ package com.example.zwiesel.recipe_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -15,9 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -36,46 +33,30 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private ListView mDrawerList, rRecipeList;
-    private LinearLayout rMainContentLayout;
+    private ListView mDrawerList;
+    private LinearLayout rLayoutRecList;
     private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private ArrayList<Recipe> rArrayList = new ArrayList<>();
+    public static ArrayList<Recipe> rArrayList = new ArrayList<>();
     private ArrayList<NavItem> mNavItems = new ArrayList<>();
-
-    TextView tv1,tv2;
-    EditText eT1;
+    private ArrayList<DisplayItem> rDisplayArrayList = new ArrayList<>();
+    public final static String EXTRA_MESSAGE = "com.example.zwiesel.recipe_app.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // tv1=(TextView)findViewById(R.id.textView1);
-        //tv2=(TextView)findViewById(R.id.textView2);
 
-        //tv1=(TextView)findViewById(R.id.textView1);
-        //Typeface face= Typeface.createFromAsset(getAssets(), "fonts/coders_crux.ttf");
-        //tv1.setTypeface(face);
-        //eT1=(EditText)findViewById(R.id.whatever);
-        //eT1.setTypeface(face);
-
-       // tv2=(TextView)findViewById(R.id.textView2);
-        //Typeface face1= Typeface.createFromAsset(getAssets(), "fonts/coders_crux.ttf");
-        //tv2.setTypeface(face1);
-
-
-        rMainContentLayout = (LinearLayout) findViewById(R.id.main_Content);
 
         //------------Drawer--------------
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_Layout);
@@ -114,12 +95,14 @@ public class MainActivity extends ActionBarActivity {
 
         //-------------Recipelist----------------
 
-        loadRecipesIntoArrayList();
+        Intent intent = getIntent();
+        boolean recAdded = intent.getBooleanExtra(EXTRA_MESSAGE, false);
+
+        //Check if a new recipe was added, so that we need to reload the array
+        //and the displayed recipes
+        //if(recAdded)
+            loadRecipesIntoArrayList();
         createRecipeList();
-
-
-
-
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -144,7 +127,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Actions for the different items on the drawer
+    /**Actions for the different items on the drawer*/
     public void selectItemFromDrawer(int position){
         switch (mNavItems.get(position).mTitle){
             case "Add Recipe":
@@ -154,6 +137,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**Opens the AddRecipeActivity*/
     public void openAddRecipe(){
         Intent intent = new Intent(this, AddRecipeActivity.class);
         startActivity(intent);
@@ -172,12 +156,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    /**Loads the recipes out of the XML-file into an ArrayList*/
     public void loadRecipesIntoArrayList() {
 
         File file = getFileStreamPath("recipes.xml");
 
         if (file.exists()) {
-            Toast.makeText(this, "File existiert", Toast.LENGTH_SHORT).show();
             try {
                 InputStream inputXML = openFileInput("recipes.xml");
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -210,9 +194,6 @@ public class MainActivity extends ActionBarActivity {
                             eElement.getElementsByTagName("description").item(0).getTextContent());
                     rArrayList.add(nListItem);
                 }
-
-                Toast.makeText(this, rArrayList.get(0).getDescription(), Toast.LENGTH_SHORT).show();
-
             }
             catch(ParserConfigurationException pcEx){
                 Toast.makeText(this, "Parser Configuration Exception", Toast.LENGTH_LONG).show();
@@ -229,21 +210,47 @@ public class MainActivity extends ActionBarActivity {
         }
 
         else
-            Toast.makeText(this, "Datei nicht vorhanden", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "File doesn't exist", Toast.LENGTH_LONG).show();
     }
 
 
-    //Population of the MainActivity with the saved recipes
+    /**Population of the MainActivity with the saved recipes*/
     public void createRecipeList(){
         for(int i=0; i<rArrayList.size(); i++){
             TextView rTextView = new TextView(this);
             rTextView.setText(rArrayList.get(i).getName());
-            rMainContentLayout.addView(rTextView);
+            rTextView.setPadding(50, 50, 50, 50);
+            rTextView.setTextSize(20f);
+            rTextView.setClickable(true);
+            rTextView.setOnClickListener(this);
+            rDisplayArrayList.add(new DisplayItem(i, rTextView));
+            rLayoutRecList.addView(rTextView);
         }
     }
 
+    public void onClick(View view){
+        openShowroom();
+    }
 
-    // Inner class for the DrawerListAdapter
+    public void openShowroom(){
+
+        Intent intent = new Intent(this, Showroom.class);
+        //intent.putExtra(MainActivity.EXTRA_MESSAGE, position);
+        startActivity(intent);
+    }
+
+
+    class DisplayItem{
+        int positionInMainArray;
+        TextView assignedTextView;
+
+        public DisplayItem(int position, TextView view){
+            positionInMainArray = position;
+            assignedTextView = view;
+        }
+    }
+
+    /**Inner class, providing items for the DrawerListAdapter*/
     class NavItem {
         String mTitle;
         int mIcon;
@@ -255,7 +262,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    // Inner class DrawerListAdapter, needed by the drawer and populated by the NavItems
+    /**Inner class, needed by the Drawer's ListView and populated by NavItems*/
     class DrawerListAdapter extends BaseAdapter {
 
         Context mContext;
@@ -281,52 +288,36 @@ public class MainActivity extends ActionBarActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
 
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.drawer_item, null);
+            if(position==0||position==1){
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    view = inflater.inflate(R.layout.drawer_item_org, null);
+                } else {
+                    view = convertView;
+                }
+
+                TextView titleView = (TextView) view.findViewById(R.id.nav_List_item_title);
+                ImageView iconView = (ImageView) view.findViewById(R.id.nav_List_item_icon);
+
+                titleView.setText(mNavItems.get(position).mTitle);
+                iconView.setImageResource(mNavItems.get(position).mIcon);
             }
             else {
-                view = convertView;
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    view = inflater.inflate(R.layout.drawer_item, null);
+                } else {
+                    view = convertView;
+                }
+
+                TextView titleView = (TextView) view.findViewById(R.id.nav_List_item_title);
+                ImageView iconView = (ImageView) view.findViewById(R.id.nav_List_item_icon);
+
+                titleView.setText(mNavItems.get(position).mTitle);
+                iconView.setImageResource(mNavItems.get(position).mIcon);
             }
-
-            TextView titleView = (TextView) view.findViewById(R.id.nav_List_item_title);
-            ImageView iconView = (ImageView) view.findViewById(R.id.nav_List_item_icon);
-
-            titleView.setText( mNavItems.get(position).mTitle);
-            iconView.setImageResource(mNavItems.get(position).mIcon);
 
             return view;
         }
     }
-
-
-    /*class RecipeListAdapter extends ArrayAdapter{
-
-        private List<Recipe> rList;
-        private Context rContext;
-
-        public RecipeListAdapter(Context context, int resource, List objects) {
-            super(context, resource, objects);
-            rList = objects;
-            rContext = context;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent){
-            View view;
-
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) rContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.r_list_item, null);
-            }
-            else {
-                view = convertView;
-            }
-
-            TextView rListItem = (TextView) findViewById(R.id.rList_item_view);
-            rListItem.setText(rList.get(position).getName());
-
-
-            return view;
-        }
-    }*/
 }

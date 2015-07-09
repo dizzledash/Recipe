@@ -11,4 +11,7 @@
     <string name="drawer_open">Menu</string>
     <string name="drawer_close">Your Recipes</string>
     <string name="saveRecipeButton_title">Save</string>
+    <string name="title_activity_showroom">Showroom</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>
