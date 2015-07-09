@@ -70,7 +70,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         mNavItems.add(new NavItem("Add Recipe", R.drawable.ic_action_add_dark));
         mNavItems.add(new NavItem("Appetizer", R.drawable.ic_action_cat_appetizer));
         mNavItems.add(new NavItem("Main Dish", R.drawable.ic_action_cat_entree));
-        mNavItems.add(new NavItem("Desserts", R.drawable.ic_action_cat_dessert));
+        mNavItems.add(new NavItem("Dessert", R.drawable.ic_action_cat_dessert));
         mNavItems.add(new NavItem("Snacks", R.drawable.ab_solid_example));
         mNavItems.add(new NavItem("Salad", R.drawable.ab_solid_example));
         mNavItems.add(new NavItem("Soup", R.drawable.ab_solid_example));
@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         //Check if a new recipe was added, so that we need to reload the array
         //and the displayed recipes
-        if(recAdded)
+        //if(recAdded)
             loadRecipesIntoArrayList();
         createRecipeList();
 
@@ -132,8 +132,35 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         switch (mNavItems.get(position).mTitle){
             case "Add Recipe":
                 openAddRecipe();
-            default:
+                break;
+            case "Appetizer":
+                createRecipeList(Recipe.CATEGORY_APPETIZER);
                 mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
+            case "Main Dish":
+                createRecipeList(Recipe.CATEGORY_MAIN_DISH);
+                mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
+            case "Dessert":
+                createRecipeList(Recipe.CATEGORY_DESSERT);
+                mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
+            case "Snacks":
+                createRecipeList(Recipe.CATEGORY_SNACKS);
+                mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
+            case "Salad":
+                createRecipeList(Recipe.CATEGORY_SALAD);
+                mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
+            case "Soup":
+                createRecipeList(Recipe.CATEGORY_SOUP);
+                mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
+            default:
+                createRecipeList();
+                mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
         }
     }
 
@@ -159,6 +186,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     /**Loads the recipes out of the XML-file into an ArrayList*/
     public void loadRecipesIntoArrayList() {
 
+        rArrayList.clear();
         File file = getFileStreamPath("recipes.xml");
 
         if (file.exists()) {
@@ -192,6 +220,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                     nListItem.setDescription(
                             eElement.getElementsByTagName("description").item(0).getTextContent());
+                    nListItem.setCategory(eElement.getAttribute("category"));
+                    Toast.makeText(this, eElement.getAttribute("category"), Toast.LENGTH_SHORT).show();
                     rArrayList.add(nListItem);
                 }
             }
@@ -216,6 +246,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     /**Population of the MainActivity with the saved recipes*/
     public void createRecipeList(){
+        rLayoutRecList.removeAllViews();
+        rDisplayArrayList.clear();
+
         for(int i=0; i<rArrayList.size(); i++){
             TextView rTextView = new TextView(this);
             rTextView.setText(rArrayList.get(i).getName());
@@ -225,6 +258,24 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             rTextView.setOnClickListener(this);
             rDisplayArrayList.add(new DisplayItem(i, rTextView));
             rLayoutRecList.addView(rTextView);
+        }
+    }
+
+    public void createRecipeList(int category){
+        rLayoutRecList.removeAllViews();
+        rDisplayArrayList.clear();
+
+        for(int i=0; i<rArrayList.size(); i++){
+            if(rArrayList.get(i).getCategory()==category) {
+                TextView rTextView = new TextView(this);
+                rTextView.setText(rArrayList.get(i).getName());
+                rTextView.setPadding(50, 50, 50, 50);
+                rTextView.setTextSize(20f);
+                rTextView.setClickable(true);
+                rTextView.setOnClickListener(this);
+                rDisplayArrayList.add(new DisplayItem(i, rTextView));
+                rLayoutRecList.addView(rTextView);
+            }
         }
     }
 

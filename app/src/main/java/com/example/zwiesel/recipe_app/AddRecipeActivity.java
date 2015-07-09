@@ -172,8 +172,11 @@ public class AddRecipeActivity extends ActionBarActivity {
                 Element rootElement = doc.getDocumentElement();
                 Element recipe = doc.createElement("recipe");
                 Attr recAttr = doc.createAttribute("name");
+                Attr recAttrCat = doc.createAttribute("category");
                 recAttr.setValue(recTitle.getText().toString());
+                recAttrCat.setValue(catSpinner.getSelectedItem().toString());
                 recipe.setAttributeNode(recAttr);
+                recipe.setAttributeNode(recAttrCat);
                 rootElement.appendChild(recipe);
 
                 //Adding the ingredients as child elements to the recipe element
@@ -229,7 +232,7 @@ public class AddRecipeActivity extends ActionBarActivity {
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
 
-            //Just creating the root-element in the XML-file
+            //Only creating the root-element in the XML-file
             Element rootElement = doc.createElement("recipeList");
             doc.appendChild(rootElement);
 
