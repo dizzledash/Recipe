@@ -69,12 +69,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         // Draweritems
         mNavItems.add(new NavItem("Home", R.drawable.ic_action_home_dark));
         mNavItems.add(new NavItem("Add Recipe", R.drawable.ic_action_add_dark));
-        mNavItems.add(new NavItem("Appetizer", R.drawable.ic_action_cat_appetizer));
-        mNavItems.add(new NavItem("Main Dish", R.drawable.ic_action_cat_entree));
-        mNavItems.add(new NavItem("Dessert", R.drawable.ic_action_cat_dessert));
-        mNavItems.add(new NavItem("Snacks", R.drawable.ab_solid_example));
-        mNavItems.add(new NavItem("Salad", R.drawable.ab_solid_example));
-        mNavItems.add(new NavItem("Soup", R.drawable.ab_solid_example));
+        mNavItems.add(new NavItem("Appetizer", R.drawable.ic_action_appetizer));
+        mNavItems.add(new NavItem("Main Dish", R.drawable.ic_action_meal));
+        mNavItems.add(new NavItem("Dessert", R.drawable.ic_action_dessert));
+        mNavItems.add(new NavItem("Snacks", R.drawable.ic_action_snack));
+        mNavItems.add(new NavItem("Salad", R.drawable.ic_action_salad));
+        mNavItems.add(new NavItem("Soup", R.drawable.ic_action_soup));
 
         // Populate the Navigation Drawer with options
         mDrawerPane = (RelativeLayout) findViewById(R.id.navigation_Content);
