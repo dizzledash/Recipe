@@ -6,7 +6,7 @@
     android:textSize="25sp"
     android:fontFamily="sans-serif-light"
     android:textStyle="normal"
-    android:background="#80DEEA">
+    android:background="#FFD166">
 
     <ImageView
         android:layout_width="wrap_content"

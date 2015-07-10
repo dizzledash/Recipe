@@ -27,7 +27,7 @@
 
     <RelativeLayout
         android:id="@+id/navigation_Content"
-        android:layout_width="200dp"
+        android:layout_width="135dp"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
@@ -36,7 +36,7 @@
             android:layout_height="match_parent"
             android:id="@+id/navigation_List"
             android:choiceMode="singleChoice"
-            android:background="#ffffffff"/>
+            android:background="#ffb300"/>
 
     </RelativeLayout>
 

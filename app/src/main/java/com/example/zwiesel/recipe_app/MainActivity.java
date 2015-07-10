@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -44,6 +45,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private ListView mDrawerList;
     private LinearLayout rLayoutRecList;
+    private TextView textView1;
     private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
@@ -57,6 +59,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rLayoutRecList = (LinearLayout) findViewById(R.id.linearLayout_recList);
+        textView1 = (TextView) findViewById(R.id.test);
+
+        Typeface font1 = Typeface.createFromAsset(getAssets(), "fonts/coders_crux.ttf");
+        //textView1.setTypeface(font1);
 
 
         //------------Drawer--------------
