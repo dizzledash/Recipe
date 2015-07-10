@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#ffffffff">
+        android:background="#FFF8E1">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/scrollView_main">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -27,7 +28,7 @@
 
     <RelativeLayout
         android:id="@+id/navigation_Content"
-        android:layout_width="135dp"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
@@ -36,7 +37,7 @@
             android:layout_height="match_parent"
             android:id="@+id/navigation_List"
             android:choiceMode="singleChoice"
-            android:background="#ffb300"/>
+            android:background="#FFE082"/>
 
     </RelativeLayout>
 

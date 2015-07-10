@@ -10,6 +10,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.transition.AutoTransition;
+import android.transition.ChangeBounds;
+import android.transition.Explode;
+import android.transition.Scene;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,17 +50,20 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ListView mDrawerList;
+    private Transition cTransition;
+    private Scene cSceneMain;
     private LinearLayout rLayoutRecList;
-    private TextView textView1;
+    private ScrollView rScrollViewMain;
+    private ViewGroup cSceneMainRoot;
+    private ListView mDrawerList;
     private RelativeLayout mDrawerPane;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    public static ArrayList<Recipe> rArrayList = new ArrayList<>();
     private ArrayList<NavItem> mNavItems = new ArrayList<>();
     private ArrayList<DisplayItem> rDisplayArrayList = new ArrayList<>();
+    public static ArrayList<Recipe> rArrayList = new ArrayList<>();
     public final static String EXTRA_MESSAGE = "com.example.zwiesel.recipe_app.MESSAGE";
 
     @Override
@@ -59,10 +71,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rLayoutRecList = (LinearLayout) findViewById(R.id.linearLayout_recList);
-        textView1 = (TextView) findViewById(R.id.nav_List_item_title);
-
-        Typeface font1 = Typeface.createFromAsset(getAssets(), "fonts/coders_crux.ttf");
-        //textView1.setTypeface(font1);
+        rScrollViewMain = (ScrollView) findViewById(R.id.scrollView_main);
+        cSceneMainRoot = rScrollViewMain;
+        cSceneMain = new Scene(cSceneMainRoot,(View) rLayoutRecList);
+        cTransition = TransitionInflater.from(this).
+                inflateTransition(R.transition.category_transition);
 
 
         //------------Drawer--------------
@@ -75,6 +88,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         // Draweritems
         mNavItems.add(new NavItem("Home", R.drawable.ic_action_home_dark));
         mNavItems.add(new NavItem("Add Recipe", R.drawable.ic_action_add_dark));
+        mNavItems.add(new NavItem("Categories"));
         mNavItems.add(new NavItem("Appetizer", R.drawable.ic_action_appetizer));
         mNavItems.add(new NavItem("Main Dish", R.drawable.ic_action_meal));
         mNavItems.add(new NavItem("Dessert", R.drawable.ic_action_dessert));
@@ -136,6 +150,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     /**Actions for the different items on the drawer*/
     public void selectItemFromDrawer(int position){
+        TransitionManager.go(cSceneMain, cTransition);
         switch (mNavItems.get(position).mTitle){
             case "Add Recipe":
                 openAddRecipe();
@@ -164,9 +179,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 createRecipeList(Recipe.CATEGORY_SOUP);
                 mDrawerLayout.closeDrawer(mDrawerPane);
                 break;
-            default:
+            case "Home":
                 createRecipeList(6);
                 mDrawerLayout.closeDrawer(mDrawerPane);
+                break;
+            default:
                 break;
         }
     }
@@ -255,49 +272,63 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         rLayoutRecList.removeAllViews();
         rDisplayArrayList.clear();
 
-        LinearLayout.LayoutParams paramsMain = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams paramsBar = new LinearLayout.LayoutParams(60, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams rParamsMain = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200);
+        LinearLayout.LayoutParams rParamsBar = new LinearLayout.LayoutParams(60, LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams rParamsField = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
         for(int i=0; i<rArrayList.size(); i++){
             if(category==rArrayList.get(i).getCategory()||category==6) {
+
                 LinearLayout rLinearLayoutMain = new LinearLayout(this);
                 LinearLayout rLinearLayoutCatBar = new LinearLayout(this);
+                LinearLayout rLinearLayoutField = new LinearLayout(this);
                 TextView rTextView = new TextView(this);
 
+                rLinearLayoutCatBar.setLayoutParams(rParamsBar);
+                rLinearLayoutMain.setLayoutParams(rParamsMain);
+                rLinearLayoutField.setLayoutParams(rParamsField);
+
                 rLinearLayoutMain.setOrientation(LinearLayout.HORIZONTAL);
-                rLinearLayoutMain.setLayoutParams(paramsMain);
+                rLinearLayoutCatBar.setOrientation(LinearLayout.VERTICAL);
+                rLinearLayoutField.setOrientation(LinearLayout.HORIZONTAL);
+                rLinearLayoutField.setClickable(true);
+                rLinearLayoutField.setOnClickListener(this);
 
                 switch (rArrayList.get(i).getCategory()) {
                     case Recipe.CATEGORY_APPETIZER:
                         rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#E91E63"));
+                        rLinearLayoutField.setBackgroundColor(Color.parseColor("#FCE4EC"));
                         break;
                     case Recipe.CATEGORY_DESSERT:
                         rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#9C27B0"));
+                        rLinearLayoutField.setBackgroundColor(Color.parseColor("#F3E5F5"));
                         break;
                     case Recipe.CATEGORY_SNACKS:
-                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#2196F3"));
+                        rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#FFEB3B"));
+                        rLinearLayoutField.setBackgroundColor(Color.parseColor("#FFFDE7"));
                         break;
                     case Recipe.CATEGORY_SALAD:
                         rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#4CAF50"));
+                        rLinearLayoutField.setBackgroundColor(Color.parseColor("#E8F5E9"));
                         break;
                     case Recipe.CATEGORY_SOUP:
                         rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#009688"));
+                        rLinearLayoutField.setBackgroundColor(Color.parseColor("#E0F2F1"));
                         break;
                     default:
                         rLinearLayoutCatBar.setBackgroundColor(Color.parseColor("#607D8B"));
+                        rLinearLayoutField.setBackgroundColor(Color.parseColor("#ECEFF1"));
                         break;
                 }
-                rLinearLayoutCatBar.setLayoutParams(paramsBar);
+
 
                 rTextView.setText(rArrayList.get(i).getName());
                 rTextView.setPadding(50, 50, 50, 50);
-                rTextView.setTextSize(20f);
-                rTextView.setClickable(true);
-                rTextView.setOnClickListener(this);
+                rTextView.setTextSize(18f);
 
+                rLinearLayoutField.addView(rTextView);
                 rLinearLayoutMain.addView(rLinearLayoutCatBar);
-                rLinearLayoutMain.addView(rTextView);
+                rLinearLayoutMain.addView(rLinearLayoutField);
                 rLayoutRecList.addView(rLinearLayoutMain);
 
                 rDisplayArrayList.add(new DisplayItem(i, rTextView));
@@ -306,6 +337,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     public void onClick(View view){
+        TransitionManager.beginDelayedTransition((ViewGroup) view, new AutoTransition());
         openShowroom();
     }
 
@@ -331,6 +363,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     class NavItem {
         String mTitle;
         int mIcon;
+
+        public NavItem(String title){
+            mTitle = title;
+        }
 
         public NavItem(String title, int icon) {
             mTitle = title;
@@ -367,10 +403,21 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                if(position==0||position==1)
-                    view = inflater.inflate(R.layout.drawer_item_org, null);
-                else
-                    view = inflater.inflate(R.layout.drawer_item, null);
+
+                switch(position){
+                    case 0:
+                        view = inflater.inflate(R.layout.drawer_item_org, null);
+                        break;
+                    case 1:
+                        view = inflater.inflate(R.layout.drawer_item_org, null);
+                        break;
+                    case 2:
+                        view = inflater.inflate(R.layout.drawer_item_header, null);
+                        break;
+                    default:
+                        view = inflater.inflate(R.layout.drawer_item, null);
+                        break;
+                }
             }
             else
                 view = convertView;
@@ -378,8 +425,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             TextView titleView = (TextView) view.findViewById(R.id.nav_List_item_title);
             ImageView iconView = (ImageView) view.findViewById(R.id.nav_List_item_icon);
 
-            titleView.setText(mNavItems.get(position).mTitle);
-            iconView.setImageResource(mNavItems.get(position).mIcon);
+            if(position==2)
+                titleView.setText(R.string.drawer_category_separator);
+            else {
+                titleView.setText(mNavItems.get(position).mTitle);
+                iconView.setImageResource(mNavItems.get(position).mIcon);
+            }
 
             return view;
         }

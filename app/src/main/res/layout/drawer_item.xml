@@ -3,16 +3,13 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textSize="25sp"
-    android:fontFamily="sans-serif-light"
-    android:textStyle="normal"
-    android:background="#FFD166">
+    android:background="#FFF8E1">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/nav_List_item_icon"
-        android:padding="8dp"/>
+        android:padding="12dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,6 +18,9 @@
         android:layout_toRightOf="@+id/nav_List_item_icon"
         android:layout_toEndOf="@+id/nav_List_item_icon"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textSize="17sp"
+        android:fontFamily="sans-serif"
+        android:padding="12dp"/>
 
 </RelativeLayout>

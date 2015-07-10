@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:transitionOrdering="together">
+
+    <slide android:slideEdge="top"
+        android:transitionVisibilityMode="mode_out"/>
+
+    <slide android:slideEdge="bottom"
+        android:startDelay="500"
+        android:transitionVisibilityMode="mode_in"/>
+
+</transitionSet>
