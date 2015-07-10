@@ -59,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rLayoutRecList = (LinearLayout) findViewById(R.id.linearLayout_recList);
-        textView1 = (TextView) findViewById(R.id.test);
+        textView1 = (TextView) findViewById(R.id.nav_List_item_title);
 
         Typeface font1 = Typeface.createFromAsset(getAssets(), "fonts/coders_crux.ttf");
         //textView1.setTypeface(font1);
