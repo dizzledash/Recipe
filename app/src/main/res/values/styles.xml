@@ -6,8 +6,8 @@
     </style>
 
     <style name="OwnActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
-        <item name="android:background">@drawable/ab_solid_orange</item>
-        <item name="background">@drawable/ab_solid_orange</item>
+        <item name="android:background">@drawable/ab_solid_orange_border</item>
+        <item name="background">@drawable/ab_solid_orange_border</item>
     </style>
 
 </resources>

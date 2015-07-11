@@ -13,6 +13,7 @@
     <string name="saveRecipeButton_title">Save</string>
     <string name="title_activity_showroom">Showroom</string>
     <string name="drawer_category_separator">Categories:</string>
+    <string name="drawer_help">Help</string>
 
     <string name="hello_world">Hello world!</string>
 </resources>
