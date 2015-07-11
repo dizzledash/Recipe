@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFE082">
+    android:background="@drawable/ic_action_case_light">
 
     <ImageView
         android:layout_width="wrap_content"
