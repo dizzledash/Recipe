@@ -14,6 +14,18 @@
     <string name="title_activity_showroom">Showroom</string>
     <string name="drawer_category_separator">Categories:</string>
     <string name="drawer_help">Help</string>
+    <string name="help_addRecipe">How I add a recipe?</string>
+    <string name="help_addRecipeAnswer">With "Add Recipe" you can add a new recipe.</string>
+    <string name="help_findRecipe">How I find my recipes?</string>
+    <string name="help_findRecipeAnswer">On the homepage you will find your recipes or you can find your recipes by the categories.</string>
+    <string name="help_addIngredients">How I can add new ingredients?</string>
+    <string name="help_addIngredientsAnswer">With the "Plus" Button you add new ingredients.</string>
+    <string name="help_save">How I can save my recipe?</string>
+    <string name="help_saveAnswer">With the disk icon you save your recipe.</string>
+    <string name="help_delete">How I can delete my recipe?</string>
+    <string name="help_deleteAnswer">I don´t know</string>
+    <string name="help_edit">How I can edit my recipe?</string>
+    <string name="help_editAnswer">I don´t know</string>
 
     <string name="hello_world">Hello world!</string>
 </resources>
