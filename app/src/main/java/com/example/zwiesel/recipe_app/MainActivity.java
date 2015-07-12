@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TransitionManager.go(cSceneMain, cTransition);
         switch (mNavItems.get(position).mTitle){
             case "Add Recipe":
+                mDrawerLayout.closeDrawer(mDrawerPane);
                 openAddRecipe();
                 break;
             case "Appetizer":
@@ -302,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 rLinearLayoutField.setOrientation(LinearLayout.HORIZONTAL);
                 rLinearLayoutField.setClickable(true);
                 rLinearLayoutField.setOnClickListener(this);
+                rLinearLayoutField.setId(i);
 
                 switch (rArrayList.get(i).getCategory()) {
                     case Recipe.CATEGORY_APPETIZER:
@@ -346,14 +348,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onClick(View view){
-        TransitionManager.beginDelayedTransition((ViewGroup) view, new AutoTransition());
-        openShowroom();
+        openShowroom(view);
     }
 
-    public void openShowroom(){
+    public void openShowroom(View view){
 
         Intent intent = new Intent(this, Showroom.class);
-        //intent.putExtra(MainActivity.EXTRA_MESSAGE, position);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE, view.getId());
+        TransitionManager.beginDelayedTransition((ViewGroup) view, new AutoTransition());
         startActivity(intent);
     }
 

@@ -83,6 +83,10 @@ public class Recipe {
         return aList.get(index);
     }
 
+    public int getIngredientCount(){
+        return aList.size();
+    }
+
     public String toString(){
         return name;
     }

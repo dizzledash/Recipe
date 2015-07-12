@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -22,6 +21,7 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,6 +39,10 @@ public class AddRecipeActivity extends ActionBarActivity {
     private EditText recTitle, ingAmount, ingTitle, descTxt;
     private LinearLayout ingLayout;
     private Spinner unitSpinner, catSpinner;
+    private ArrayList<EditText> saveIngNameArrayList = new ArrayList<>();
+    private ArrayList<EditText> saveIngAmountArrayList = new ArrayList<>();
+    private ArrayList<Spinner> saveIngUnitArrayList = new ArrayList<>();
+    private boolean newLine;
     private final boolean REC_ADDED = true;
 
 
@@ -55,6 +59,7 @@ public class AddRecipeActivity extends ActionBarActivity {
         descTxt = (EditText) findViewById(R.id.editText_description);
         unitSpinner = (Spinner) findViewById(R.id.spinner_unit);
         catSpinner = (Spinner) findViewById(R.id.spinner_category);
+        newLine = true;
 
         // Creation of dynamically added spinner
         ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
@@ -102,6 +107,13 @@ public class AddRecipeActivity extends ActionBarActivity {
     /** After click on the plus-button, dynamically a new line of ingredient-input is created*/
     public void clickAddIngr(View v){
 
+        if(newLine){
+            saveIngNameArrayList.add(ingTitle);
+            saveIngAmountArrayList.add(ingAmount);
+            saveIngUnitArrayList.add(unitSpinner);
+            newLine = false;
+        }
+
         // Predefined parameters needed for the initialization
         LinearLayout.LayoutParams paramsName = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
@@ -124,6 +136,7 @@ public class AddRecipeActivity extends ActionBarActivity {
         edTxtName.setTextSize(15);
         edTxtName.setMaxLines(1);
         newLayout.addView(edTxtName);
+        saveIngNameArrayList.add(edTxtName);
 
         // EditText for amount
         EditText edTxtAmount = new EditText(this);
@@ -133,6 +146,7 @@ public class AddRecipeActivity extends ActionBarActivity {
         edTxtAmount.setTextSize(15);
         edTxtAmount.setInputType(2);
         newLayout.addView(edTxtAmount);
+        saveIngAmountArrayList.add(edTxtAmount);
 
         // Unit spinner
         ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this,
@@ -143,6 +157,7 @@ public class AddRecipeActivity extends ActionBarActivity {
         spinUnit.setAdapter(spinAdapter);
         spinUnit.setLayoutParams(paramsSpinner);
         newLayout.addView(spinUnit);
+        saveIngUnitArrayList.add(spinUnit);
 
         ingLayout.addView(newLayout);
     }
@@ -177,16 +192,20 @@ public class AddRecipeActivity extends ActionBarActivity {
                 recipe.setAttributeNode(recAttrCat);
                 rootElement.appendChild(recipe);
 
+
                 //Adding the ingredients as child elements to the recipe element
-                Element ing = doc.createElement("ingredient");
-                Attr ingAttrAmount = doc.createAttribute("amount");
-                Attr ingAttrUnit = doc.createAttribute("unit");
-                ingAttrAmount.setValue(ingAmount.getText().toString());
-                ingAttrUnit.setValue(unitSpinner.getSelectedItem().toString());
-                ing.setAttributeNode(ingAttrAmount);
-                ing.setAttributeNode(ingAttrUnit);
-                ing.appendChild(doc.createTextNode(ingTitle.getText().toString()));
-                recipe.appendChild(ing);
+                for(int j = 0; j<saveIngNameArrayList.size(); j++) {
+
+                    Element ing = doc.createElement("ingredient");
+                    Attr ingAttrAmount = doc.createAttribute("amount");
+                    Attr ingAttrUnit = doc.createAttribute("unit");
+                    ingAttrAmount.setValue(saveIngAmountArrayList.get(j).getText().toString());
+                    ingAttrUnit.setValue(saveIngUnitArrayList.get(j).getSelectedItem().toString());
+                    ing.setAttributeNode(ingAttrAmount);
+                    ing.setAttributeNode(ingAttrUnit);
+                    ing.appendChild(doc.createTextNode(saveIngNameArrayList.get(j).getText().toString()));
+                    recipe.appendChild(ing);
+                }
 
                 //Adding the description text as child to the recipe element
                 Element infoTxt = doc.createElement("description");
@@ -212,7 +231,7 @@ public class AddRecipeActivity extends ActionBarActivity {
             catch (TransformerException tEx){
                 Toast.makeText(this, "TransformerException", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(this, "Recipe saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Recipe saved", Toast.LENGTH_SHORT).show();
         }
         else
             createSaveFile();
