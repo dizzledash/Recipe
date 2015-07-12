@@ -29,4 +29,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_need_help">NeedHelp</string>
+    <string name="showroom_action_edit">edit</string>
+    <string name="title_activity_edit">Edit recipe</string>
 </resources>

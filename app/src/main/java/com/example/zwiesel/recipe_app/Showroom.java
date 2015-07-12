@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
+import android.widget.ViewSwitcher;
 
 
 public class Showroom extends AppCompatActivity {
@@ -17,6 +17,7 @@ public class Showroom extends AppCompatActivity {
     private TextView rName, rDescription;
     private LinearLayout rIngContent;
     private Recipe usedRecipe;
+    private int intentValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +28,11 @@ public class Showroom extends AppCompatActivity {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         Intent intent = getIntent();
+        intentValue = intent.getIntExtra(MainActivity.EXTRA_MESSAGE, 0);
         rName = (TextView) findViewById(R.id.textView_showroom_name);
         rDescription = (TextView) findViewById(R.id.textView_showroom_description);
         rIngContent = (LinearLayout) findViewById(R.id.showroom_ing_content);
-        usedRecipe = MainActivity.rArrayList.get(intent.getIntExtra(MainActivity.EXTRA_MESSAGE, 0));
+        usedRecipe = MainActivity.rArrayList.get(intentValue);
 
         rName.setText(usedRecipe.getName());
         rDescription.setText(usedRecipe.getDescription());
@@ -43,25 +45,49 @@ public class Showroom extends AppCompatActivity {
             ingItem.setOrientation(LinearLayout.HORIZONTAL);
             ingItem.setPadding(10, 10, 10, 10);
 
+
+
             TextView ingTitle = new TextView(this);
             ingTitle.setWidth((int) (150 * (this.getResources().getDisplayMetrics().density) + 0.5f));
             ingTitle.setTextAlignment(TextView.TEXT_ALIGNMENT_VIEW_START);
-            //ingTitle.setGravity(1);
             ingTitle.setText(ingredientStringArray[0]);
             ingTitle.setPadding(10, 10, 10, 10);
-            ingItem.addView(ingTitle);
+            //ingItem.addView(ingTitle);
+
+            EditText ingTitleEditText = new EditText(this);
+            ingTitleEditText.setWidth(ingTitle.getWidth());
+            ingTitleEditText.setTextAlignment(ingTitle.getTextAlignment());
+            ingTitleEditText.setText(ingTitle.getText());
+            ingTitleEditText.setPadding(10, 10, 10, 10);
+
+            final ViewSwitcher switchTitle = new ViewSwitcher(this);
+            switchTitle.addView(ingTitle);
+            switchTitle.addView(ingTitleEditText);
+            switchTitle.setClickable(true);
+            switchTitle.showNext();
+            switchTitle.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    switchTitle.showNext();
+                    return false;
+                }
+            });
+
+            ingItem.addView(switchTitle);
+
+
 
             TextView ingAmount = new TextView(this);
             ingAmount.setWidth((int) (50 * (this.getResources().getDisplayMetrics().density) + 0.5f));
             ingAmount.setTextAlignment(TextView.TEXT_ALIGNMENT_VIEW_END);
-            //ingAmount.setGravity(3);
             ingAmount.setText(ingredientStringArray[1]);
             ingAmount.setPadding(10, 10, 10, 10);
             ingItem.addView(ingAmount);
 
+
+
             TextView ingUnit = new TextView(this);
             ingUnit.setWidth((int) (50 * (this.getResources().getDisplayMetrics().density) + 0.5f));
-            //ingUnit.setGravity(4);
             ingUnit.setText(ingredientStringArray[2]);
             ingUnit.setPadding(10,10,10,10);
             ingItem.addView(ingUnit);
@@ -87,9 +113,10 @@ public class Showroom extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        /*if () {
+        if (id==R.id.action_edit) {
+            //openEdit();
             return true;
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mNavItems.add(new NavItem("Snacks", R.drawable.ic_action_snack));
         mNavItems.add(new NavItem("Salad", R.drawable.ic_action_salad));
         mNavItems.add(new NavItem("Soup", R.drawable.ic_action_soup));
-        mNavItems.add(new NavItem("Need Help?"));
+        mNavItems.add(new NavItem("Need Help?", R.drawable.ic_action_help));
 
         // Populate the Navigation Drawer with options
         mDrawerPane = (RelativeLayout) findViewById(R.id.navigation_Content);
@@ -125,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //if(recAdded)
             loadRecipesIntoArrayList();
         createRecipeList(6);
+
+
+        
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

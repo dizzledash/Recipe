@@ -35,7 +35,6 @@ import javax.xml.transform.stream.StreamResult;
 
 public class AddRecipeActivity extends ActionBarActivity {
 
-    //private ImageButton buttonAddIngr;
     private EditText recTitle, ingAmount, ingTitle, descTxt;
     private LinearLayout ingLayout;
     private Spinner unitSpinner, catSpinner;
@@ -163,7 +162,7 @@ public class AddRecipeActivity extends ActionBarActivity {
     }
 
 
-    /**Saves the typed in recipe into an xml file*/
+    /**Saves the typed-in recipe into an xml file*/
     public void saveRec() {
 
         //TODO-soe Check whether views - at least title-view - are empty; if true -> message and don't save

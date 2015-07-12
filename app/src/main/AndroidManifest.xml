@@ -32,6 +32,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.zwiesel.recipe_app.MainActivity" />
         </activity>
+        <activity
+            android:name=".NeedHelp"
+            android:label="@string/title_activity_need_help"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.zwiesel.recipe_app.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Edit"
+            android:label="@string/title_activity_edit"
+            android:parentActivityName=".Showroom" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.zwiesel.recipe_app.Showroom" />
+        </activity>
     </application>
 
 </manifest>
