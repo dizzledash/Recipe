@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.zwiesel.recipe_app.Showroom">
 
-    <item android:id="@+id/action_edit"
+    <item android:id="@+id/action_save_edited"
         android:title="@string/showroom_action_edit"
-        android:icon="@drawable/ic_action_edit_white"
+        android:icon="@drawable/ic_action_save"
         app:showAsAction="ifRoom" />
 </menu>

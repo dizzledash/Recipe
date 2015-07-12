@@ -21,7 +21,8 @@
            android:id="@+id/editText_rec_title"
            android:hint="@string/name_hint"
            android:maxLines="1"
-           android:layout_weight="1"/>
+           android:layout_weight="1"
+           android:inputType="textCapWords"/>
 
         <Spinner
             android:layout_width="match_parent"
@@ -104,7 +105,8 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:paddingBottom="5dp"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:inputType="textCapSentences"/>
 
             </LinearLayout>
         </ScrollView>
