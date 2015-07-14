@@ -63,8 +63,11 @@ public class Recipe {
 
     public void setIngredient(int index, String title, String amount, String unit){
         String[] ingredient = new String[]{title, amount, unit};
-        aList.remove(index);
-        aList.add(index, ingredient);
+        aList.set(index, ingredient);
+    }
+
+    public void setIngredient(int index, String[] array){
+        aList.set(index, array);
     }
 
     public String getName(){
@@ -77,6 +80,23 @@ public class Recipe {
 
     public int getCategory(){
         return category;
+    }
+
+    public String getCategoryAsString() {
+        switch (category){
+            case CATEGORY_APPETIZER:
+                return "Appetizer";
+            case CATEGORY_DESSERT:
+                return "Dessert";
+            case CATEGORY_SOUP:
+                return "Soup";
+            case CATEGORY_SNACKS:
+                return "Snacks";
+            case CATEGORY_SALAD:
+                return "Salad";
+            default:
+                return "Main Dish";
+        }
     }
 
     public String[] getIngredient(int index){

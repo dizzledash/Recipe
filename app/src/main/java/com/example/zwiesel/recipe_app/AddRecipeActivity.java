@@ -42,7 +42,6 @@ public class AddRecipeActivity extends ActionBarActivity {
     private ArrayList<EditText> saveIngAmountArrayList = new ArrayList<>();
     private ArrayList<Spinner> saveIngUnitArrayList = new ArrayList<>();
     private boolean newLine;
-    private final boolean REC_ADDED = true;
 
 
 
@@ -73,6 +72,8 @@ public class AddRecipeActivity extends ActionBarActivity {
                 android.R.layout.simple_spinner_item);
         spinAdapterCat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         catSpinner.setAdapter(spinAdapterCat);
+
+        descTxt.setMaxWidth(ingLayout.getWidth());
     }
 
 
@@ -134,8 +135,10 @@ public class AddRecipeActivity extends ActionBarActivity {
         edTxtName.setLayoutParams(paramsName);
         edTxtName.setTextSize(15);
         edTxtName.setMaxLines(1);
+        edTxtName.setInputType(android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS);
         newLayout.addView(edTxtName);
         saveIngNameArrayList.add(edTxtName);
+
 
         // EditText for amount
         EditText edTxtAmount = new EditText(this);
@@ -165,80 +168,84 @@ public class AddRecipeActivity extends ActionBarActivity {
     /**Saves the typed-in recipe into an xml file*/
     public void saveRec() {
 
-        //TODO-soe Check whether views - at least title-view - are empty; if true -> message and don't save
-
-
-        File saveFile = getFileStreamPath("recipes.xml");
-
-        if(saveFile.exists()) {
-
-            try {
-
-                DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-                Document doc = docBuilder.parse(openFileInput("recipes.xml"));
-
-                doc.getDocumentElement().normalize();
-
-                //Getting the root-element to add a new recipe
-                Element rootElement = doc.getDocumentElement();
-                Element recipe = doc.createElement("recipe");
-                Attr recAttr = doc.createAttribute("name");
-                Attr recAttrCat = doc.createAttribute("category");
-                recAttr.setValue(recTitle.getText().toString());
-                recAttrCat.setValue(catSpinner.getSelectedItem().toString());
-                recipe.setAttributeNode(recAttr);
-                recipe.setAttributeNode(recAttrCat);
-                rootElement.appendChild(recipe);
-
-
-                //Adding the ingredients as child elements to the recipe element
-                for(int j = 0; j<saveIngNameArrayList.size(); j++) {
-
-                    Element ing = doc.createElement("ingredient");
-                    Attr ingAttrAmount = doc.createAttribute("amount");
-                    Attr ingAttrUnit = doc.createAttribute("unit");
-                    ingAttrAmount.setValue(saveIngAmountArrayList.get(j).getText().toString());
-                    ingAttrUnit.setValue(saveIngUnitArrayList.get(j).getSelectedItem().toString());
-                    ing.setAttributeNode(ingAttrAmount);
-                    ing.setAttributeNode(ingAttrUnit);
-                    ing.appendChild(doc.createTextNode(saveIngNameArrayList.get(j).getText().toString()));
-                    recipe.appendChild(ing);
-                }
-
-                //Adding the description text as child to the recipe element
-                Element infoTxt = doc.createElement("description");
-                infoTxt.appendChild(doc.createTextNode(descTxt.getText().toString()));
-                recipe.appendChild(infoTxt);
-
-                TransformerFactory transFact = TransformerFactory.newInstance();
-                Transformer transf = transFact.newTransformer();
-                DOMSource src = new DOMSource(doc);
-                StreamResult res = new StreamResult(openFileOutput("recipes.xml", Context.MODE_PRIVATE));
-
-                transf.transform(src, res);
-            }
-            catch (ParserConfigurationException pcEx) {
-                Toast.makeText(this, "ParserConfigurationException", Toast.LENGTH_LONG).show();
-            }
-            catch (IOException ioEx){
-                Toast.makeText(this, "IOException", Toast.LENGTH_LONG).show();
-            }
-            catch (SAXException SAXEx){
-                Toast.makeText(this, "SAXException", Toast.LENGTH_LONG).show();
-            }
-            catch (TransformerException tEx){
-                Toast.makeText(this, "TransformerException", Toast.LENGTH_LONG).show();
-            }
-                Toast.makeText(this, "Recipe saved", Toast.LENGTH_SHORT).show();
+        if(newLine){
+            saveIngNameArrayList.add(ingTitle);
+            saveIngAmountArrayList.add(ingAmount);
+            saveIngUnitArrayList.add(unitSpinner);
         }
-        else
-            createSaveFile();
 
-        //Let the MainActivity know, that we added a new recipe
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(MainActivity.EXTRA_MESSAGE, REC_ADDED);
-        startActivity(intent);
+        if(recTitle.getText().toString().equals(""))
+            Toast.makeText(this, "Recipe needs a name!", Toast.LENGTH_LONG).show();
+        else {
+
+            File saveFile = getFileStreamPath("recipes.xml");
+
+            if (saveFile.exists()) {
+
+                try {
+
+                    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+                    Document doc = docBuilder.parse(openFileInput("recipes.xml"));
+
+                    doc.getDocumentElement().normalize();
+
+                    //Getting the root-element to add a new recipe
+                    Element rootElement = doc.getDocumentElement();
+                    Element recipe = doc.createElement("recipe");
+                    Attr recAttr = doc.createAttribute("name");
+                    Attr recAttrCat = doc.createAttribute("category");
+                    recAttr.setValue(recTitle.getText().toString());
+                    recAttrCat.setValue(catSpinner.getSelectedItem().toString());
+                    recipe.setAttributeNode(recAttr);
+                    recipe.setAttributeNode(recAttrCat);
+                    rootElement.appendChild(recipe);
+
+
+                    //Adding the ingredients as child elements to the recipe element
+                    for (int j = 0; j < saveIngNameArrayList.size(); j++) {
+
+                        Element ing = doc.createElement("ingredient");
+                        Attr ingAttrAmount = doc.createAttribute("amount");
+                        Attr ingAttrUnit = doc.createAttribute("unit");
+                        ingAttrAmount.setValue(saveIngAmountArrayList.get(j).getText().toString());
+                        ingAttrUnit.setValue(saveIngUnitArrayList.get(j).getSelectedItem().toString());
+                        ing.setAttributeNode(ingAttrAmount);
+                        ing.setAttributeNode(ingAttrUnit);
+                        ing.appendChild(doc.createTextNode(saveIngNameArrayList.get(j).getText().toString()));
+                        recipe.appendChild(ing);
+                    }
+
+                    //Adding the description text as child to the recipe element
+                    Element infoTxt = doc.createElement("description");
+                    infoTxt.appendChild(doc.createTextNode(descTxt.getText().toString()));
+                    recipe.appendChild(infoTxt);
+
+                    TransformerFactory transFact = TransformerFactory.newInstance();
+                    Transformer transf = transFact.newTransformer();
+                    DOMSource src = new DOMSource(doc);
+                    StreamResult res = new StreamResult(openFileOutput("recipes.xml", Context.MODE_PRIVATE));
+
+                    transf.transform(src, res);
+
+                } catch (ParserConfigurationException pcEx) {
+                    Toast.makeText(this, "ParserConfigurationException", Toast.LENGTH_LONG).show();
+                } catch (IOException ioEx) {
+                    Toast.makeText(this, "IOException", Toast.LENGTH_LONG).show();
+                } catch (SAXException SAXEx) {
+                    Toast.makeText(this, "SAXException", Toast.LENGTH_LONG).show();
+                } catch (TransformerException tEx) {
+                    Toast.makeText(this, "TransformerException", Toast.LENGTH_LONG).show();
+                }
+                Toast.makeText(this, "Recipe saved", Toast.LENGTH_SHORT).show();
+            } else
+                createSaveFile();
+
+            //Let the MainActivity know, that we added a new recipe
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(MainActivity.EXTRA_MESSAGE, 1);
+            startActivity(intent);
+        }
     }
 
     /**If the XML-File for saving the recipes doesn't exists, it will be created here*/

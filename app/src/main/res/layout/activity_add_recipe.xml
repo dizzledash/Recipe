@@ -61,7 +61,8 @@
                             android:id="@+id/editText_ing_name_shown"
                             android:hint="@string/ingredient_name_hint"
                             android:maxLines="1"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            android:inputType="textCapWords"/>
 
                         <EditText
                             android:layout_width="match_parent"

@@ -118,11 +118,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //-------------Recipelist----------------
 
         Intent intent = getIntent();
-        boolean recAdded = intent.getBooleanExtra(EXTRA_MESSAGE, false);
+        int loadFromXML = intent.getIntExtra(EXTRA_MESSAGE, 0);
 
         //Check if a new recipe was added, so that we need to reload the array
         //and the displayed recipes
-        //if(recAdded)
+        //if(loadFromXML==0)
             loadRecipesIntoArrayList();
         createRecipeList(6);
 
