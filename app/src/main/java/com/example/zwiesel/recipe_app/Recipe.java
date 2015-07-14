@@ -3,6 +3,12 @@ package com.example.zwiesel.recipe_app;
 import java.util.ArrayList;
 
 
+/**
+ * The recipe class provides a data type for the recipes you want to manage.
+ * The name and the recipe-description are implemented with strings,
+ * the ingredients with String-Arrays and for better managing the categories
+ * on the main activity, the assigned categories are implemented with the int data type.
+ */
 public class Recipe {
 
     static final int CATEGORY_APPETIZER = 0;
@@ -21,6 +27,12 @@ public class Recipe {
         name = n;
     }
 
+    /**
+     * Adding an ingredient to the recipe, which is implemented as a string-array
+     * @param title
+     * @param amount
+     * @param unit
+     */
     public void addIngredient(String title, String amount, String unit){
         String[] ingredient = new String[]{title, amount, unit};
         aList.add(ingredient);
@@ -105,9 +117,5 @@ public class Recipe {
 
     public int getIngredientCount(){
         return aList.size();
-    }
-
-    public String toString(){
-        return name;
     }
 }

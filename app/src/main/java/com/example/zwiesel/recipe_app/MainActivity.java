@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
-    /**Opens the Need Help*/
+    /**Opens the NeedHelpActivity*/
     public void openNeedHelp(){
         startActivity(new Intent(this,NeedHelp.class));
     }
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    /**Population of the MainActivity with the saved recipes*/
+    /**Populates the MainActivity with the saved recipes*/
     public void createRecipeList(int category){
         rLayoutRecList.removeAllViews();
         rDisplayArrayList.clear();
@@ -373,7 +373,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /**Inner class, providing items for the DrawerListAdapter*/
+    /**Class, providing items for the DrawerListAdapter*/
     class NavItem {
         String mTitle;
         int mIcon;
@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    /**Inner class, needed by the Drawer's ListView and populated by NavItems*/
+    /**Needed by the Drawer's ListView and populated by NavItems*/
     class DrawerListAdapter extends BaseAdapter {
 
         Context mContext;

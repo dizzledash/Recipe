@@ -33,6 +33,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 
+/**
+ * With the AddRecipeActivity you are able to type-in and save new recipes.
+ */
 public class AddRecipeActivity extends ActionBarActivity {
 
     private EditText recTitle, ingAmount, ingTitle, descTxt;

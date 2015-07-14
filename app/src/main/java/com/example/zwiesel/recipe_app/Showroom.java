@@ -32,7 +32,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-
+/**
+ * This class/activity provides the possibility to view your saved recipes.
+ * Also you can edit every part by long-clicking on it.
+ */
 public class Showroom extends AppCompatActivity {
 
     //TODO-soe Add or delete ingredient in editing mode
@@ -55,6 +58,8 @@ public class Showroom extends AppCompatActivity {
 
         LinearLayout.LayoutParams rParamsIngItem = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, 120);
+
+        //Getting the message, send by the MainActivity, which contains the recipe to be shown.
         Intent intent = getIntent();
         intentValue = intent.getIntExtra(MainActivity.EXTRA_MESSAGE, 0);
 
@@ -68,6 +73,7 @@ public class Showroom extends AppCompatActivity {
         usedRecipe = MainActivity.rArrayList.get(intentValue);
 
 
+        //Showing the name and switching the view, when long-clicking on the TextView
         switchRName.setLongClickable(true);
         rName.setText(usedRecipe.getName());
         rNameEditText.setText(rName.getText());
@@ -84,7 +90,8 @@ public class Showroom extends AppCompatActivity {
         });
 
 
-
+        //Dynamically creating views for every ingredient the recipe contains.
+        //Also handling the view switching, when long-clicking on the TextView.
         for(int j = 0; j<usedRecipe.getIngredientCount(); j++){
 
             ViewSwitcher[] viewSwitcherArray = new ViewSwitcher[3];
@@ -202,6 +209,7 @@ public class Showroom extends AppCompatActivity {
         }
 
 
+        //Showing and switching views for the description part of the recipe
         rDescription.setText(usedRecipe.getDescription());
         rDescriptionEditText.setText(rDescription.getText());
         switchRDescription.setLongClickable(true);
@@ -241,6 +249,11 @@ public class Showroom extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * Saving the edited recipe. First refreshing the static recipe-arrayList and then
+     * creating a new XML-file, thus overwriting the old file, for permanent saving.
+     */
     public void saveEditedRecipe(){
 
         if(changedName)
